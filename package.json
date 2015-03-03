@@ -1,5 +1,7 @@
 {
   "name": "node-authentication",
+  "repository": "https://github.com/Seonaid/passport_tutorial",
+  "description":"Running through the tutorial at https://scotch.io/tutorials/easy-node-authentication-setup-and-local",
   "main": "server.js",
   "dependencies" : {
     "express" : "~4.0.0",           
