@@ -1,6 +1,11 @@
 var LocalStrategy = require('passport-local').Strategy;
+var FacebookStrategy = require('passport-facebook').Strategy;
 
 var User = require('../app/models/user');
+
+var configAuth = require('./auth');
+
+console.log("clientID = " + JSON.stringify(configAuth.facebookAuth));
 
 module.exports = function(passport){
 	passport.serializeUser(function(user, done){
@@ -12,6 +17,40 @@ module.exports = function(passport){
 			done(err, user);
 		});
 	});
+
+	passport.use(new FacebookStrategy({
+		clientID : 337039586487565,
+		clientSecret: 'f6bdcca3b778e2e8cb46ecaaea0b7a7a',
+		callbackURL : 'http://localhost:8080/auth/facebook/callback'
+
+	}, 
+
+	function(token, refreshToken, profile, done) {
+		 process.nextTick(function() {
+			User.findOne({ 'facebook.id': profile.id}, function(err, user){
+				if (err)
+					return done(err);
+
+				if (user) { // if the user already exists, return them from the database
+					return done(null, user);
+				} else { // otherwise, create a new user in the database using the facebook information
+					var newUser = new User();
+					newUser.facebook.id = profile.id;
+					newUser.facebook.token = token;
+					newUser.facebook.name = profile.name.givenName + ' ' + profile.name.familyName;
+					newUser.facebook.email = profile.emails[0].value;
+
+					newUser.save(function(err){
+						if (err);
+							throw err;
+						return done(null, newUser);
+					});
+				}
+					
+
+			});
+		});
+	}));
 
 	passport.use('local-signup', new LocalStrategy({
 		usernameField : 'email', // this is an override of the default, which is username

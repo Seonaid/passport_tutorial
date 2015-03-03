@@ -30,6 +30,13 @@ module.exports = function(app, passport){
 			res.render('profile.ejs', {user: req.user});
 	});
 
+	app.get('/auth/facebook', passport.authenticate('facebook', {scope: 'email'})); 
+	// 'scope' is where you set what you are going to ask from from Facebook. This says, "please send back the email address".
+	app.get('/auth/facebook/callback', passport.authenticate('facebook', {
+		successRedirect: '/profile',
+		failureRedirect: '/'
+	}));
+
 	app.get('/logout', function(req, res){
 			req.logout();
 			res.redirect('/');
