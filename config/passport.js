@@ -56,7 +56,7 @@ module.exports = function(passport){
 				});
 			} else { // if the user is already logged in
 				var user = req.user;
-				console.log ('linking user to existing account');
+				console.log ('linking facebook login to existing local account');
 
 				user.facebook.id = profile.id;
 				user.facebook.token = token;

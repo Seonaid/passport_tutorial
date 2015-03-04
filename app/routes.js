@@ -27,7 +27,7 @@ module.exports = function(app, passport){
 	}));
 
 	app.get('/connect/local', function(req, res) {
-		res.render('connect-local.ejs', { message: res.flash('loginMessage')});
+		res.render('connect-local.ejs', { message: req.flash('loginMessage')});
 	});
 
 	app.post('/connect/local', passport.authenticate('local-signup', {
