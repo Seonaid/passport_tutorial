@@ -18,16 +18,22 @@
 
     <div class="row">
 
-        <!-- LOCAL INFORMATION -->
+<!-- LOCAL INFORMATION -->
         <div class="col-sm-6">
             <div class="well">
                 <h3><span class="fa fa-user"></span> Local</h3>
 
+                <% if (user.local.email) { %>
                     <p>
                         <strong>id</strong>: <%= user._id %><br>
                         <strong>email</strong>: <%= user.local.email %><br>
                         <strong>password</strong>: <%= user.local.password %>
                     </p>
+                    
+                    <a href="/unlink/local" class="btn btn-default">Unlink</a>
+                <% } else { %>
+                    <a href="/connect/local" class="btn btn-default">Connect Local</a>
+                <% } %>
 
             </div>
         </div>
@@ -36,6 +42,8 @@
         <div class="col-sm-6">
             <div class="well">
                 <h3 class="text-primary"><span class="fa fa-facebook"></span> Facebook</h3>
+                    <% if (user.facebook.id) { %>
+
 
                     <p>
                         <strong>id</strong>: <%= user.facebook.id %><br>
@@ -44,6 +52,11 @@
                         <strong>name</strong>: <%= user.facebook.name %>
                     </p>
 
+                    <a href="/unlink/facebook" class="btn btn-default">Unlink</a>
+               <% } else { %> 
+                    <a href="/connect/facebook" class="btn btn-default">Connect Facebook</a>
+               <% } %>
+
             </div>
         </div>
 
@@ -51,7 +64,7 @@
         <div class="col-sm-6">
             <div class="well">
                 <h3 class="text-info"><span class="fa fa-twitter"></span> Twitter</h3>
-
+                    <% if (user.twitter.id) { %>
                     <p>
                         <strong>id</strong>: <%= user.twitter.id %><br>
                         <strong>token</strong>: <%= user.twitter.token %><br>
@@ -59,6 +72,10 @@
                         <strong>displayName</strong>: <%= user.twitter.displayName %>
                     </p>
 
+                    <a href="/unlink/twitter" class="btn btn-default">Unlink</a>
+                    <% } else { %> 
+                        <a href="/connect/twitter" class="btn btn-default">Connect Twitter</a>
+               <% } %>
             </div>
         </div>
 
