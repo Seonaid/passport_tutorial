@@ -1,5 +1,6 @@
 var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
+var TwitterStrategy = require('passport-twitter').Strategy;
 
 var User = require('../app/models/user');
 
@@ -19,9 +20,9 @@ module.exports = function(passport){
 	});
 
 	passport.use(new FacebookStrategy({
-		clientID : 337039586487565,
-		clientSecret: 'f6bdcca3b778e2e8cb46ecaaea0b7a7a',
-		callbackURL : 'http://localhost:8080/auth/facebook/callback'
+		clientID : configAuth.facebookAuth.clientID,
+		clientSecret: configAuth.facebookAuth.clientSecret,
+		callbackURL : configAuth.facebookAuth.callbackURL
 
 	}, 
 
@@ -48,6 +49,38 @@ module.exports = function(passport){
 				}
 					
 
+			});
+		});
+	}));
+
+	passport.use(new TwitterStrategy({
+		consumerKey : configAuth.twitterAuth.consumerKey,
+		consumerSecret: configAuth.twitterAuth.consumerSecret,
+		callbackURL: configAuth.twitterAuth.callbackURL
+	},
+	function(token, tokenSecret, profile, done) {
+		// asynch
+		process.nextTick(function(){
+			User.findOne({ 'twitter.id': profile.id}, function(err, user){
+				if (err)
+					return done(err);
+
+				if(user) {
+					return done(null, user);
+				} else {
+					var newUser = new User();
+
+					newUser.twitter.id = profile.id;
+					newUser.twitter.token = token;
+					newUser.twitter.username = profile.username;
+					newUser.twitter.displayName = profile.displayName;
+				}
+
+				newUser.save(function(err){
+					if (err)
+						throw err;
+					return done(null, newUser);
+				});
 			});
 		});
 	}));
